@@ -1,12 +1,13 @@
 # completion file for bash
 
 # Copyright (C) 2012 Jason A. Donenfeld <Jason@zx2c4.com> and
-# Brian Mattern <rephorm@rephorm.com>. All Rights Reserved.
+# Brian Mattern <rephorm@rephorm.com> and
+# Pierre-Yves Chibon <pingou@pingoured.fr>. All Rights Reserved.
 # This file is licensed under the GPLv2+. Please see COPYING for more information.
 
-_pass_complete_entries () {
-	prefix="${PASSWORD_STORE_DIR:-$HOME/.password-store/}"
-	suffix=".gpg"
+_note_complete_entries () {
+	prefix="${NOTE_STORE_DIR:-$HOME/.note-store/}"
+	suffix=".txt"
 	autoexpand=${1:-0}
 
 	local IFS=$'\n'
@@ -37,12 +38,6 @@ _pass_complete_entries () {
 	done
 }
 
-_pass_complete_keys () {
-	local IFS=$'\n'
-	# Extract names and email addresses from gpg --list-keys
-	local keys="$(gpg2 --list-secret-keys --with-colons | cut -d : -f 10 | sort -u | sed '/^$/d')"
-	COMPREPLY+=($(compgen -W "${keys}" -- ${cur}))
-}
 
 _pass()
 {
@@ -51,23 +46,15 @@ _pass()
 	local commands="init ls show insert generate edit rm git help version"
 	if [[ $COMP_CWORD -gt 1 ]]; then
 		case "${COMP_WORDS[1]}" in
-			init)
-				COMPREPLY+=($(compgen -W "-e --reencrypt" -- ${cur}))
-				_pass_complete_keys
-				;;
 			ls|list|edit)
 				_pass_complete_entries
 				;;
 			show|-*)
-				COMPREPLY+=($(compgen -W "-c --clip" -- ${cur}))
+				COMPREPLY+=($(compgen -W "" -- ${cur}))
 				_pass_complete_entries 1
 				;;
 			insert)
-				COMPREPLY+=($(compgen -W "-e --echo -m --multiline -f --force" -- ${cur}))
-				_pass_complete_entries
-				;;
-			generate)
-				COMPREPLY+=($(compgen -W "-n --no-symbols -c --clip -f --force" -- ${cur}))
+				COMPREPLY+=($(compgen -W " -m --multiline -f --force" -- ${cur}))
 				_pass_complete_entries
 				;;
 			rm|remove|delete)

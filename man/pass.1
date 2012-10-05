@@ -1,10 +1,10 @@
-.TH PASS 1 "2012 Sept 24" ZX2C4 "Password Store"
+.TH PASS 1 "2012 Oct 05" pingou "Note Store"
 
 .SH NAME
-pass - stores, retrieves, generates, and synchronizes passwords securely
+note - stores, retrieves, generates, and synchronizes notes
 
 .SH SYNOPSIS
-.B pass
+.B note
 [ 
 .I COMMAND
 ] [ 
@@ -15,16 +15,15 @@ pass - stores, retrieves, generates, and synchronizes passwords securely
 
 .SH DESCRIPTION
 
-.B pass 
-is a very simple password store that keeps passwords inside 
-.BR gpg2 (1)
-encrypted files inside a simple directory tree residing at 
-.IR ~/.password-store .
+.B note 
+is a very simple notes store that keeps your notes files inside a simple
+directory tree residing at 
+.IR ~/.note-store .
 The
-.B pass
-utility provides a series of commands for manipulating the password store,
-allowing the user to add, remove, edit, synchronize, generate, and manipulate
-passwords.
+.B note
+utility provides a series of commands for manipulating the notes store,
+allowing the user to add, remove, edit, synchronize, and manipulate
+notes.
 
 If no COMMAND is specified, COMMAND defaults to either
 .B show
@@ -34,79 +33,44 @@ depending on the type of specifier in ARGS. Otherwise COMMAND must be one of
 the valid commands listed below.
 
 Several of the commands below rely on or provide additional functionality if
-the password store directory is also a git repository. If the password store
-directory is a git repository, all password store modification commands will
+the note store directory is also a git repository. If the note store
+directory is a git repository, all note store modification commands will
 cause a corresponding git commit. See the \fIEXTENDED GIT EXAMPLE\fP section
 for a detailed description using \fBinit\fP and
 .BR git (1).
 
-The \fBinit\fP command must be run before other commands in order to initialize
-the password store with the correct gpg key id. Passwords are encrypting using
-the gpg key set with \fBinit\fP.
-
 There is a corresponding bash completion script for use with tab completing
-password names in
+note names in
 .BR bash (1).
 
 .SH COMMANDS
 
 .TP
-\fBinit\fP [ \fI--reencrypt\fP, \fI-e\fP ] \fIgpg-id\fP
-Initialize new password storage and use
-.I gpg-id
-for encryption. This command must be run first before a password store can be
-used. If \fI--reencrypt\fP or \fI-e\fP is specified, reencrypt all existing
-passwords in the password store using \fIgpg-id\fP. Note that use of
-.BR gpg-agent (1)
-is recommended so that the batch decryption does not require as much user
-intervention.
-.TP
 \fBls\fP \fIsubfolder\fP
-List names of passwords inside the tree at
+List names of notes inside the tree at
 .I subfolder
 by using the
 .BR tree (1)
 program. This command is alternatively named \fBlist\fP.
 .TP
-\fBshow\fP [ \fI--clip\fP, \fI-c\fP ] \fIpass-name\fP
-Decrypt and print a password named \fIpass-name\fP. If \fI--clip\fP or \fI-c\fP
-is specified, do not print the password but instead copy the first line to the
-clipboard using
-.BR xclip (1)
-and then restore the clipboard after 45 seconds.
+\fBshow\fP \fInote-name\fP
+Decrypt and print a note named \note-name\fP. 
 .TP
-\fBinsert\fP [ \fI--echo\fP, \fI-e\fP | \fI--multiline\fP, \fI-m\fP ] [ \fI--force\fP, \fI-f\fP ] \fIpass-name\fP
-Insert a new password into the password store called \fIpass-name\fP. This will
-read the new password from standard in. If \fI--echo\fP or \fI-e\fP is \fInot\fPspecified,
-disable keyboard echo when the password is entered and confirm the password by asking
-for it twice. If \fI--multiline\fP or \fI-m\fP is specified, lines will be read until
-EOF or Ctrl+D is reached. Otherwise, only a single line from standard in is read. Prompt
-before overwriting an existing password, unless \fI--force\fP or \fI-f\fP is specified.
+\fBinsert\fP [ \fI--force\fP, \fI-f\fP ] \fInote-name\fP
+Insert a new note into the note store called \fInote-name\fP. This will
+read the new note from standard in until EOF or Ctrl+D is reached.
+Prompt before overwriting an existing password, unless \fI--force\fP or \fI-f\fP is specified.
 .TP
-\fBedit\fP \fIpass-name\fP
-Insert a new password or edit an existing password using the default text editor specified
+\fBedit\fP \fInote-name\fP
+Insert a new note or edit an existing note using the default text editor specified
 by the environment variable \fIEDITOR\fP or using
 .BR vi (1)
-as a fallback. This mode makes use of temporary files for editing, but care is taken to
-ensure that temporary files are created in \fI/dev/shm\fP in order to avoid writing to
-difficult-to-erase disk sectors. If \fI/dev/shm\fP is not accessible, fallback to
-the ordinary \fITMPDIR\fP location, and print a warning.
+as a fallback.
 .TP
-\fBgenerate\fP [ \fI--no-symbols\fP, \fI-n\fP ] [ \fI--clip\fP, \fI-c\fP ] [ \fI--force\fP, \fI-f\fP ] \fIpass-name pass-length\fP
-Generate a new password using
-.BR pwgen (1)
-of length \fIpass-length\fP and insert into \fIpass-name\fP. If \fI--no-symbols\fP or \fI-n\fP
-is specified, do not use any non-alphanumeric characters in the generated password.
-If \fI--clip\fP or \fI-c\fP is specified, do not print the password but instead copy
-it to the clipboard using
-.BR xclip (1)
-and then restore the clipboard after 45 seconds. Prompt before overwriting an existing password,
-unless \fI--force\fP or \fI-f\fP is specified.
-.TP
-\fBrm\fP [ \fI--recursive\fP, \fI-r\fP ] [ \fI--force\fP, \fI-f\fP ] \fIpass-name\fP
-Remove the password named \fIpass-name\fP from the password store. This command is
+\fBrm\fP [ \fI--recursive\fP, \fI-r\fP ] [ \fI--force\fP, \fI-f\fP ] \fInote-name\fP
+Remove the note named \fInote-name\fP from the note store. This command is
 alternatively named \fBremove\fP or \fBdelete\fP. If \fI--recursive\fP or \fI-r\fP
-is specified, delete pass-name recursively if it is a directory. If \fI--force\fP
+is specified, delete note-name recursively if it is a directory. If \fI--force\fP
 or \fI-f\fP is specified, do not interactively prompt before removal.
 .TP
 \fBgit\fP \fIgit-command-args\fP...
@@ -125,138 +89,94 @@ Show version information.
 .SH SIMPLE EXAMPLES
 
 .TP
-Initialize password store
-.B zx2c4@laptop ~ $ pass init Jason@zx2c4.com 
+List existing note in store
+.B zx2c4@laptop ~ $ note 
 .br
-mkdir: created directory \[u2018]/home/zx2c4/.password-store\[u2019] 
+Note Store
 .br
-Password store initialized for Jason@zx2c4.com.
-.TP
-List existing passwords in store
-.B zx2c4@laptop ~ $ pass 
+\[u251C]\[u2500]\[u2500] TODO 
 .br
-Password Store
+\[u2502]   \[u251C]\[u2500]\[u2500] SendEmailsList 
 .br
-\[u251C]\[u2500]\[u2500] Business 
+\[u2502]   \[u2514]\[u2500]\[u2500] Groceries 
 .br
-\[u2502]   \[u251C]\[u2500]\[u2500] some-silly-business-site.com 
+\[u251C]\[u2500]\[u2500] Address 
 .br
-\[u2502]   \[u2514]\[u2500]\[u2500] another-business-site.net 
+\[u2502]   \[u251C]\[u2500]\[u2500] Mum 
 .br
-\[u251C]\[u2500]\[u2500] Email 
+\[u2502]   \[u2514]\[u2500]\[u2500] Darling 
 .br
-\[u2502]   \[u251C]\[u2500]\[u2500] donenfeld.com 
+\[u2514]\[u2500]\[u2500] Conference 
 .br
-\[u2502]   \[u2514]\[u2500]\[u2500] zx2c4.com 
+    \[u251C]\[u2500]\[u2500] FUDConEMEA2011 
 .br
-\[u2514]\[u2500]\[u2500] France 
+    \[u251C]\[u2500]\[u2500] FOSDEM2011 
 .br
-    \[u251C]\[u2500]\[u2500] bank 
-.br
-    \[u251C]\[u2500]\[u2500] freebox 
-.br
-    \[u2514]\[u2500]\[u2500] mobilephone  
+    \[u2514]\[u2500]\[u2500] FOSDEM2011  
 .br
 
 .br
-Alternatively, "\fBpass ls\fP".
+Alternatively, "\fBnote ls\fP".
 .TP
-Show existing password
-.B zx2c4@laptop ~ $ pass Email/zx2c4.com 
+Show existing notes
+.B zx2c4@laptop ~ $ pass Address/Darling 
 .br
-sup3rh4x3rizmynam3 
+I'm not going to tell you 
 .TP
-Copy existing password to clipboard
-.B zx2c4@laptop ~ $ pass -c Email/zx2c4.com 
+Add note to store
+.B zx2c4@laptop ~ $ note insert Conference/FUDConEMEA2011 
 .br
-Copied Email/jason@zx2c4.com to clipboard. Will clear in 45 seconds.
-.TP
-Add password to store
-.B zx2c4@laptop ~ $ pass insert Business/cheese-whiz-factory 
-.br
-Enter password for Business/cheese-whiz-factory: omg so much cheese what am i gonna do
-.TP
-Add multiline password to store 
-.B zx2c4@laptop ~ $ pass insert -m Business/cheese-whiz-factory 
-.br
-Enter contents of Business/cheese-whiz-factory and press Ctrl+D when finished: 
+Enter contents for Conference/FUDConEMEA2011 and press Ctrl+D when finished:
 .br
  
 .br
-Hey this is my 
+It was awesome!
 .br
-awesome 
-.br
-multi 
-.br
-line 
-.br
-passworrrrrrrrd. 
-.br
-^D 
+Paris is magic
+.r
+^D
 .TP
-Generate new password
-.B zx2c4@laptop ~ $ pass generate Email/jasondonenfeld.com 15 
-.br
-The generated password to Email/jasondonenfeld.com is: 
-.br
-$(-QF&Q=IN2nFBx
 .TP
-Generate new alphanumeric password
-.B zx2c4@laptop ~ $ pass -n generate Email/jasondonenfeld.com 12
+Remove note from store
+.B zx2c4@laptop ~ $ pass remove Conference/FUDConEMEA2011 
 .br
-The generated password to Email/jasondonenfeld.com is: 
+Are you sure you would like to delete test2? [y/N] y
 .br
-YqFsMkBeO6di
-.TP
-Generate new password and copy it to the clipboard
-.B zx2c4@laptop ~ $ pass -c generate Email/jasondonenfeld.com 19
-.br
-Copied Email/jasondonenfeld.com to clipboard. Will clear in 45 seconds.
-.TP
-Remove password from store
-.B zx2c4@laptop ~ $ pass remove Business/cheese-whiz-factory 
-.br
-rm: remove regular file \[u2018]/home/zx2c4/.password-store/Business/cheese-whiz-factory.gpg\[u2019]? y 
-.br
-removed \[u2018]/home/zx2c4/.password-store/Business/cheese-whiz-factory.gpg\[u2019]
+removed \[u2018]/home/pingou/.note-store/test2.txt\[u2019]
 
 .SH EXTENDED GIT EXAMPLE
-Here, we initialize new password store, create a git repository, and then manipulate and sync passwords. Make note of the arguments to the first call of \fBpass git push\fP; consult
+Here, we initialize new note store, create a git repository, and then manipulate and sync passwords. 
+Make note of the arguments to the first call of \fBnote git push\fP; consult
 .BR git-push (1)
 for more information.
 
-.B zx2c4@laptop ~ $ pass init Jason@zx2c4.com 
+.B zx2c4@laptop ~ $ note git init 
 .br
-mkdir: created directory \[u2018]/home/zx2c4/.password-store\[u2019] 
+Initialized empty Git repository in /home/pingou/.note-store/.git/
 .br
-Password store initialized for Jason@zx2c4.com. 
+[master (root-commit) 998c8fd] Added current contents of note store.
+.br
+ 1 file changed, 1 insertion(+)
 
-.B zx2c4@laptop ~ $ pass git init 
+.B zx2c4@laptop ~ $ note git remote add origin example.com:note-store 
+
+.B zx2c4@laptop ~ $ note insert Conference/FUDConNA2012
 .br
-Initialized empty Git repository in /home/zx2c4/.password-store/.git/
+mkdir: created directory \[u2018]/home/pingou/.note-store/Conference\[u2019] 
 .br
-[master (root-commit) 998c8fd] Added current contents of password store.
+Enter contents of Conference/FUDConNA2012 and press Ctrl+D when finished:
+.br
+ 
+.br
+This is in January 13 to 15th
+.br
+^D
+[master 3123966] Added given note for Conference/FUDConNA2012 to store.
 .br
  1 file changed, 1 insertion(+)
 .br
- create mode 100644 .gpg-id
-
-.B zx2c4@laptop ~ $ pass git remote add origin kexec.com:pass-store 
-
-.B zx2c4@laptop ~ $ pass generate Amazon/amazonemail@email.com 21 
-.br
-mkdir: created directory \[u2018]/home/zx2c4/.password-store/Amazon\[u2019] 
-.br
-[master 30fdc1e] Added generated password for Amazon/amazonemail@email.com to store.
-.br
-1 file changed, 0 insertions(+), 0 deletions(-) 
-.br
-create mode 100644 Amazon/amazonemail@email.com.gpg 
-.br
-The generated password to Amazon/amazonemail@email.com is: 
-.br
-<5m,_BrZY`antNDxKN<0A 
+ create mode 100644 Conference/FUDConNA2012.txt
+.bd
 
 .B zx2c4@laptop ~ $ pass git push -u --all
 .br
@@ -270,35 +190,23 @@ Writing objects: 100% (4/4), 921 bytes, done.
 .br
 Total 4 (delta 0), reused 0 (delta 0) 
 .br
-To kexec.com:pass-store 
+To example.com:note-store 
 .br
 * [new branch]      master -> master 
 .br
 Branch master set up to track remote branch master from origin. 
 
-.B zx2c4@laptop ~ $ pass insert Amazon/otheraccount@email.com 
+.B zx2c4@laptop ~ $ pass rm Conference/FUDConNA2012 
 .br
-Enter password for Amazon/otheraccount@email.com: som3r3a11yb1gp4ssw0rd!!88** 
+Are you sure you would like to delete Conference/FUDConNA2012? [y/N] y 
 .br
-[master b9b6746] Added given password for Amazon/otheraccount@email.com to store. 
+removed \[u2018]/home/pingou/.note-store/Conference/FUDConNA2012.txt\[u2019] 
 .br
-1 file changed, 0 insertions(+), 0 deletions(-) 
+[master f43094c] Removed Conference/FUDConNA2012 from store. 
 .br
-create mode 100644 Amazon/otheraccount@email.com.gpg 
-
-.B zx2c4@laptop ~ $ pass rm Amazon/amazonemail@email.com 
+ 1 file changed, 1 deletion(-)
 .br
-rm: remove regular file \[u2018]/home/zx2c4/.password-store/Amazon/amazonemail@email.com.gpg\[u2019]? y 
-.br
-removed \[u2018]/home/zx2c4/.password-store/Amazon/amazonemail@email.com.gpg\[u2019] 
-.br
-rm 'Amazon/amazonemail@email.com.gpg' 
-.br
-[master 288b379] Removed Amazon/amazonemail@email.com from store. 
-.br
-1 file changed, 0 insertions(+), 0 deletions(-) 
-.br
-delete mode 100644 Amazon/amazonemail@email.com.gpg 
+ delete mode 100644 Conference/FUDConNA2012.txt
 
 .B zx2c4@laptop ~ $ pass git push
 .br
@@ -312,49 +220,44 @@ Writing objects: 100% (7/7), 1.25 KiB, done.
 .br
 Total 7 (delta 0), reused 0 (delta 0) 
 .br
-To kexec.com:pass-store
+To example.com:pass-store
 
 .SH FILES
 
 .TP
-.B ~/.password-store
-The default password storage directory.
-.TP
-.B ~/.password-store/.gpg-id
-Contains the default gpg key identification used for encryption and decryption.
-This should be set using the \fBinit\fP command.
+.B ~/.note-store
+The default note storage directory.
 
 .SH ENVIRONMENT VARIABLES
 
 .TP
-.I PASSWORD_STORE_DIR
+.I NOTE_STORE_DIR
 Overrides the default password storage directory.
 .TP
-.I PASSWORD_STORE_KEY
-Overrides the default gpg key identification set by \fBinit\fP.
 .TP
-.I PASSWORD_STORE_GIT
+.I NOTE_STORE_GIT
 Overrides the default root of the git repository, which is helpful if
-\fIPASSWORD_STORE_DIR\fP is temporarily set to a sub-directory of the default
+\fINOTE_STORE_DIR\fP is temporarily set to a sub-directory of the default
 password store.
 .TP
 .I EDITOR
 The location of the text editor used by \fBedit\fP.
 
 .SH SEE ALSO
-.BR gpg22 (1),
-.BR pwgen (1),
 .BR git (1),
-.BR xclip (1).
 
 .SH AUTHOR
-.B pass
-was written by
+.B node
+was adapted by
+.MT pingou@pingoured.fr
+Pierre-Yves Chibon
+.ME.
+from code written by
 .MT Jason@zx2c4.com
 Jason A. Donenfeld
 .ME .
 For updates and more information, a project page is available on the
-.UR http://\:zx2c4.com/\:projects/\:password-store
+.UR http://\:github.com/\:pypingou/\:note-store
 World Wide Web
 .UE .
 

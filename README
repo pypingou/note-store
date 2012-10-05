@@ -1,30 +1,25 @@
 ======================
-Simple Password Store
+Simple Note Store
+by Pierre-Yves Chibon
+   pingou@pingoured.fr
+Based on Simple
+  Password Store from
 by Jason Donenfeld
    Jason@zx2c4.com
 ======================
 
-This is a very simple password store that encrypts passwords using gpg and
-places the encrypted password in a directory. It can generate new passwords
-and keep track of old ones.
+This is a very simple note store that keeps your notes in a directory and
+keep track of old changes in a git repository.
 
-Visit the project page for more information: http://zx2c4.com/projects/password-store
+Visit the project page for more information: http://github.com/pypingou/note-store
 
 Please see the man page for documentation and examples.
 
 Depends on:
 - bash
   http://www.gnu.org/software/bash/
-- GnuPG2
-  http://www.gnupg.org/
 - git
   http://www.git-scm.com/
-- xclip
-  http://sourceforge.net/projects/xclip/
-- pwgen
-  http://sourceforge.net/projects/pwgen/
-- tree
-  http://mama.indstate.edu/users/ice/tree/
 - GNU getopt
   http://www.kernel.org/pub/linux/utils/util-linux/
   http://software.frodo.looijaard.name/getopt/
