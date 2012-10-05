@@ -23,3 +23,7 @@ Depends on:
 - GNU getopt
   http://www.kernel.org/pub/linux/utils/util-linux/
   http://software.frodo.looijaard.name/getopt/
+
+
+Most of the code has been written by Jason Donenfeld for his password-store
+project available at: http://zx2c4.com/projects/password-store
